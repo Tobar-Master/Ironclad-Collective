@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ironclad Collective</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  section[id] { scroll-margin-top: 64px; }
+  body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #0a0a0f; color: #ffffff; -webkit-font-smoothing: antialiased; }
+
+  /* ── NAV ── */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,15,0.95); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; height: 64px; }
+  .nav-logo { font-weight: 900; font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; color: #fff; }
+  .nav-logo span { color: #f0a875; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.7); transition: color 0.2s; padding: 4px 0; }
+  .nav-links a:hover, .nav-links a.active { color: #f0a875; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: rgba(10,10,15,0.98); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.1); flex-direction: column; padding: 0.5rem 5%; z-index: 99; }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { text-decoration: none; font-size: 1rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: rgba(255,255,255,0.8); padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.08); transition: color 0.2s; min-height: 44px; display: flex; align-items: center; }
+  .mobile-menu a:last-child { border-bottom: none; }
+  .mobile-menu a:hover { color: #f0a875; }
+
+  /* ── HERO ── */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 100px 6% 80px; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(240,168,117,0.05) 0%, transparent 70%); pointer-events: none; }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+  .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(240,168,117,0.12); color: #f0a875; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 14px; border-radius: 100px; border: 1px solid rgba(240,168,117,0.3); margin-bottom: 2rem; }
+  .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #f0a875; animation: blink 2s infinite; flex-shrink: 0; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+  .hero h1 { font-size: clamp(3.2rem, 9vw, 7rem); font-weight: 900; line-height: 0.95; letter-spacing: -0.03em; color: #fff; margin-bottom: 1.5rem; max-width: 800px; }
+  .hero h1 .accent { color: #f0a875; display: block; }
+  .hero-divider { width: 48px; height: 3px; background: #f0a875; border-radius: 2px; margin-bottom: 2rem; }
+  .hero-sub { font-size: clamp(1rem, 2vw, 1.15rem); color: rgba(255,255,255,0.8); max-width: 540px; line-height: 1.75; margin-bottom: 2.5rem; font-weight: 400; }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); font-size: 0.78rem; font-weight: 500; color: rgba(255,255,255,0.8); padding: 6px 14px; border-radius: 6px; }
+
+  /* ── SECTIONS ── */
+  section { padding: 80px 6%; }
+  .section-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #f0a875; margin-bottom: 0.75rem; }
+  .section-title { font-size: clamp(1.9rem, 4vw, 3rem); font-weight: 900; color: #fff; margin-bottom: 0.75rem; letter-spacing: -0.02em; line-height: 1.1; }
+  .section-sub { font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 560px; line-height: 1.75; margin-bottom: 3rem; }
+
+  /* ── ABOUT ── */
+  #about { background: #0a0a0f; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; max-width: 1100px; }
+  .about-card { background: #16161f; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.75rem; transition: border-color 0.2s; }
+  .about-card:hover { border-color: rgba(240,168,117,0.35); }
+  .about-card h3 { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #f0a875; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+  .about-card h3 svg { width: 14px; height: 14px; stroke: #f0a875; fill: none; stroke-width: 2; flex-shrink: 0; }
+  .about-card p { font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.75; }
+  .about-card p strong { color: #fff; font-weight: 700; }
+  .about-card ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .about-card ul li { font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.6; padding-left: 1.25rem; position: relative; }
+  .about-card ul li::before { content: '—'; position: absolute; left: 0; color: #f0a875; font-size: 0.75rem; top: 2px; }
+  .about-card ul li strong { color: #fff; font-weight: 700; }
+  .about-full { grid-column: 1 / -1; }
+
+  /* ── DEFINE STATEMENT ── */
+  .problem-statement { grid-column: 1 / -1; background: #16161f; border-radius: 12px; padding: 2.25rem; border: 1px solid rgba(240,168,117,0.3); position: relative; overflow: hidden; }
+  .problem-statement::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #f0a875, transparent); }
+  .ps-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #f0a875; margin-bottom: 1rem; }
+  .problem-statement blockquote { font-size: 1.05rem; color: #fff; line-height: 1.8; font-style: normal; font-weight: 500; }
+
+  /* ── RUBRIC ── */
+  .rubric-strip { grid-column: 1 / -1; background: #16161f; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.75rem; }
+  .rubric-strip h3 { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #f0a875; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 8px; }
+  .rubric-strip h3 svg { width: 14px; height: 14px; stroke: #f0a875; fill: none; stroke-width: 2; }
+  .rubric-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 0.75rem; }
+  .rubric-item { background: #0a0a0f; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.875rem 1rem; transition: border-color 0.2s; }
+  .rubric-item:hover { border-color: rgba(240,168,117,0.3); }
+  .ri-title { font-size: 0.82rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .ri-desc { font-size: 0.78rem; color: rgba(255,255,255,0.7); line-height: 1.5; }
+
+  /* ── VIDEO ── */
+  #video { background: #111118; }
+  .video-wrapper { max-width: 900px; margin: 0 auto; border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1); position: relative; padding-bottom: 56.25%; height: 0; }
+  .video-wrapper iframe, .video-wrapper video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+  .video-placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #16161f; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; gap: 1rem; }
+  .play-btn { width: 80px; height: 80px; border-radius: 50%; background: rgba(240,168,117,0.12); border: 1.5px solid rgba(240,168,117,0.35); display: flex; align-items: center; justify-content: center; transition: transform 0.2s, background 0.2s; }
+  .play-btn:hover { transform: scale(1.08); background: rgba(240,168,117,0.22); }
+  .play-btn svg { width: 26px; height: 26px; fill: #f0a875; margin-left: 4px; }
+  .video-placeholder p { color: rgba(255,255,255,0.75); font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ── TEAM ── */
+  #team { background: #0a0a0f; }
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; max-width: 1100px; }
+  .member-card { background: #16161f; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.75rem; display: flex; flex-direction: column; gap: 1rem; transition: transform 0.2s, border-color 0.2s; }
+  .member-card:hover { transform: translateY(-3px); border-color: rgba(240,168,117,0.3); }
+  .member-top { display: flex; align-items: center; gap: 1rem; }
+  .avatar { width: 60px; height: 60px; border-radius: 50%; background: rgba(240,168,117,0.12); border: 1.5px solid rgba(240,168,117,0.3); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; color: #f0a875; overflow: hidden; flex-shrink: 0; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .member-name { font-size: 1rem; font-weight: 700; color: #fff; }
+  .member-role { font-size: 0.72rem; font-weight: 600; color: #f0a875; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px; }
+  .member-bio { font-size: 0.85rem; color: rgba(255,255,255,0.75); line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.875rem; }
+  .member-links { display: flex; flex-direction: column; gap: 8px; }
+  .member-links a { font-size: 0.85rem; color: rgba(255,255,255,0.7); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color 0.15s; min-height: 44px; }
+  .member-links a:hover { color: #f0a875; }
+  .member-links a svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+
+  /* ── RESOURCES ── */
+  #resources { background: #111118; }
+  .resources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.25rem; max-width: 1000px; }
+  .resource-card { background: #16161f; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; transition: transform 0.2s, border-color 0.2s; }
+  .resource-card:hover { transform: translateY(-3px); border-color: rgba(240,168,117,0.3); }
+  .resource-icon { width: 44px; height: 44px; border-radius: 9px; background: rgba(240,168,117,0.1); border: 1px solid rgba(240,168,117,0.25); display: flex; align-items: center; justify-content: center; }
+  .resource-icon svg { width: 20px; height: 20px; stroke: #f0a875; fill: none; stroke-width: 1.75; }
+  .resource-title { font-size: 0.95rem; font-weight: 700; color: #fff; }
+  .resource-desc { font-size: 0.85rem; color: rgba(255,255,255,0.75); line-height: 1.6; flex: 1; }
+  .dl-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(240,168,117,0.1); color: #f0a875; border: 1px solid rgba(240,168,117,0.3); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em; padding: 10px 18px; border-radius: 8px; text-decoration: none; cursor: pointer; transition: background 0.2s; width: fit-content; min-height: 44px; }
+  .dl-btn:hover { background: rgba(240,168,117,0.2); }
+  .dl-btn svg { width: 14px; height: 14px; stroke: #f0a875; fill: none; stroke-width: 2; }
+
+  /* ── PHILOSOPHY ── */
+  #philosophy { background: #0a0a0f; }
+  .phil-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.25rem; max-width: 1000px; }
+  .phil-card { background: #16161f; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.75rem; position: relative; overflow: hidden; transition: border-color 0.2s; }
+  .phil-card:hover { border-color: rgba(240,168,117,0.3); }
+  .phil-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, #f0a875, transparent); opacity: 0; transition: opacity 0.2s; }
+  .phil-card:hover::after { opacity: 1; }
+  .phil-num { font-size: 3rem; font-weight: 900; color: rgba(240,168,117,0.08); line-height: 1; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+  .phil-card h3 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #fff; margin-bottom: 0.6rem; }
+  .phil-card p { font-size: 0.875rem; color: rgba(255,255,255,0.75); line-height: 1.7; }
+  .phil-card em { display: block; margin-top: 0.75rem; font-size: 0.78rem; color: #f0a875; font-style: normal; font-weight: 600; letter-spacing: 0.03em; }
+
+  /* ── FOOTER ── */
+  footer { background: #111118; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; padding: 2.5rem 5%; font-size: 0.82rem; color: rgba(255,255,255,0.6); letter-spacing: 0.03em; }
+  footer strong { color: #fff; }
+  footer .sep { color: #f0a875; margin: 0 6px; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 700px) {
+    nav .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .about-grid { grid-template-columns: 1fr; }
+    .about-full, .problem-statement, .rubric-strip { grid-column: 1; }
+    .team-grid { grid-template-columns: 1fr; }
+    .resources-grid { grid-template-columns: 1fr 1fr; }
+    .phil-grid { grid-template-columns: 1fr 1fr; }
+    .hero { padding: 100px 5% 60px; }
+    section { padding: 64px 5%; }
+    .problem-statement blockquote { font-size: 0.95rem; }
+  }
+  @media (max-width: 420px) {
+    .resources-grid, .phil-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 2.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">IRONCLAD <span>COLLECTIVE</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#video">Presentation</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#resources">Resources</a></li>
+    <li><a href="#philosophy">Approach</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Open navigation menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#video" onclick="closeMenu()">Presentation</a>
+  <a href="#team" onclick="closeMenu()">Team</a>
+  <a href="#resources" onclick="closeMenu()">Resources</a>
+  <a href="#philosophy" onclick="closeMenu()">Approach</a>
+</div>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <a href="https://ispi2026.mystrikingly.com/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#f0a875;"><div class="badge"><div class="badge-dot"></div>ISPI HPT Case Competition 2026 ↗</div></a>
+  <h1>Ironclad<span class="accent">Collective.</span></h1>
+  <div class="hero-divider"></div>
+  <p class="hero-sub">We don't guess at solutions. We diagnose the real problem — then build a system to fix it. Graduate consultants applying HPT to a workforce performance crisis in the U.S. maritime industry.</p>
+  <div class="hero-tags">
+    <span class="tag">Human Performance Technology</span>
+    <span class="tag">Systems Thinking</span>
+    <span class="tag">Workforce Development</span>
+    <span class="tag">ISPI Standards</span>
+    <span class="tag">Design Thinking</span>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-label">The Project</div>
+  <div class="section-title">HarborTech Marine Services</div>
+  <div class="section-sub">A ten-week HPT consulting engagement. One company. Five interconnected performance failures. One root cause no one wanted to name.</div>
+  <div class="about-grid">
+
+    <div class="problem-statement">
+      <div class="ps-label">HPT Define Statement</div>
+      <blockquote>Performers in [context] are unable to [observable behavior] to the required standard because [validated root cause], resulting in [measurable organizational impact]. This statement will reflect the team's finalized HPT Define stage analysis and root cause synthesis.</blockquote>
+    </div>
+
+    <div class="about-card">
+      <h3><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>The Challenge</h3>
+      <p>HarborTech Marine Services — a ~420-person maritime trades company in Hampton Roads, VA — is hemorrhaging people and expertise despite strong contract demand. The belief driving every bad decision: <strong>"The pipeline is strong enough to replace losses."</strong> It isn't. And no one has been willing to say so. Until now.</p>
+    </div>
+
+    <div class="about-card">
+      <h3><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Key Findings</h3>
+      <ul>
+        <li><strong>Finding Category One:</strong> Performance gap descriptor and evidence type to be determined through cause analysis</li>
+        <li><strong>Finding Category Two:</strong> Systemic factor identified during needs assessment — details pending team synthesis</li>
+        <li><strong>Finding Category Three:</strong> Environmental or process-level barrier observed in organizational context</li>
+        <li><strong>Finding Category Four:</strong> Incentive, feedback, or capacity constraint surfaced during root cause categorization</li>
+        <li><strong>Finding Category Five:</strong> Knowledge, skill, or structural gap to be validated against case evidence</li>
+      </ul>
+    </div>
+
+    <div class="about-card">
+      <h3><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>Proposed Interventions</h3>
+      <ul>
+        <li><strong>Intervention Area One:</strong> Performance system or structural redesign — scope and approach to be determined</li>
+        <li><strong>Intervention Area Two:</strong> Leadership or supervisory capability solution — format pending intervention selection</li>
+        <li><strong>Intervention Area Three:</strong> Process, workflow, or environmental change — details to follow cause analysis</li>
+        <li><strong>Intervention Area Four:</strong> Knowledge management or technology-enabled solution — specifics TBD</li>
+        <li><strong>Intervention Area Five:</strong> Incentive, feedback, or retention-aligned intervention — metrics and timeline pending</li>
+      </ul>
+    </div>
+
+    <div class="about-card">
+      <h3><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Our Methodology</h3>
+      <ul>
+        <li><strong>Phase One — Analysis:</strong> HPT front-end analysis framework to be named — approach pending team alignment</li>
+        <li><strong>Phase Two — Diagnosis:</strong> Root cause categorization method — training vs. non-training distinction applied</li>
+        <li><strong>Phase Three — Design:</strong> Intervention selection logic and solution framework — details to be finalized</li>
+        <li><strong>Phase Four — Validation:</strong> Prototype and feasibility review process — format and scope TBD</li>
+        <li><strong>Phase Five — Evaluation:</strong> Measurement strategy and success metrics — aligned to business outcomes</li>
+      </ul>
+    </div>
+
+    <div class="about-card about-full">
+      <h3><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Competition Timeline</h3>
+      <ul style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px 2rem;margin-top:0.5rem;">
+        <li>Jan 21 — Orientation &amp; Case Packet</li>
+        <li>Jan 28 — HPT Discussion &amp; Define</li>
+        <li>Feb 4 — Ideate &amp; Questions Due</li>
+        <li>Feb 11–25 — Case Development</li>
+        <li>Mar 4–11 — Prototype Phase</li>
+        <li>Mar 18 — Promo Video &amp; Cards Due</li>
+        <li>Mar 25 — Final Case Meeting</li>
+        <li>Mar 30–Apr 2 — ISPI Conference, Washington D.C.</li>
+      </ul>
+    </div>
+
+    <div class="rubric-strip">
+      <a href="https://ispi.org/page/AI4PIPlaybook" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
+        <h3><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>How Judges Evaluate Us ↗</h3>
+      </a>
+      <div class="rubric-items">
+        <div class="rubric-item"><div class="ri-title">Problem Diagnosis</div><div class="ri-desc">Systems-level root cause, not surface symptoms</div></div>
+        <div class="rubric-item"><div class="ri-title">Mindset Identification</div><div class="ri-desc">Explicitly challenge the disposable workforce belief</div></div>
+        <div class="rubric-item"><div class="ri-title">Apprenticeship Design</div><div class="ri-desc">Integrated performance system, not just training</div></div>
+        <div class="rubric-item"><div class="ri-title">Leadership Strategy</div><div class="ri-desc">Culture &amp; decision redesign, not generic training</div></div>
+        <div class="rubric-item"><div class="ri-title">Systems Integration</div><div class="ri-desc">Fully integrated interventions, not point solutions</div></div>
+        <div class="rubric-item"><div class="ri-title">Use of Metrics</div><div class="ri-desc">Business-aligned, measurable outcomes</div></div>
+        <div class="rubric-item"><div class="ri-title">Feasibility</div><div class="ri-desc">Realistic, phased, constraint-aware solutions</div></div>
+        <div class="rubric-item"><div class="ri-title">Innovation</div><div class="ri-desc">Creative but grounded — not idealistic</div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="video">
+  <div class="section-label">Watch</div>
+  <div class="section-title">Our Presentation</div>
+  <div class="section-sub">The full walkthrough — methodology, findings, and integrated solutions. No filler.</div>
+  <div class="video-wrapper" id="videoContainer">
+    <div class="video-placeholder" onclick="loadVideo()" role="button" aria-label="Play presentation video">
+      <div class="play-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg></div>
+      <p>Play Presentation</p>
+    </div>
+  </div>
+</section>
+
+<section id="team">
+  <div class="section-label">The Team</div>
+  <div class="section-title">Meet the Collective</div>
+  <div class="section-sub">Seven practitioners. One shared conviction: define the right problem or the solution doesn't matter.</div>
+  <div class="team-grid" id="teamGrid"></div>
+</section>
+
+<section id="resources">
+  <div class="section-label">Downloads</div>
+  <div class="section-title">Documentation</div>
+  <div class="section-sub">All materials for judges and participants. Place PDFs in the same folder as the HTML file.</div>
+  <div class="resources-grid">
+    <div class="resource-card">
+      <div class="resource-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="resource-title">1-Pager Overview</div>
+      <div class="resource-desc">Single-page snapshot of the project, key findings, and proposed solutions.</div>
+      <a class="dl-btn" href="one-pager.pdf" download aria-label="Download 1-Pager Overview PDF"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</a>
+    </div>
+    <div class="resource-card">
+      <div class="resource-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div>
+      <div class="resource-title">Executive Summary</div>
+      <div class="resource-desc">Methodology, root cause analysis, solution recommendations, metrics, and cost framing.</div>
+      <a class="dl-btn" href="executive-summary.pdf" download aria-label="Download Executive Summary PDF"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</a>
+    </div>
+    <div class="resource-card">
+      <div class="resource-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+      <div class="resource-title">Full Research Report</div>
+      <div class="resource-desc">Complete analysis, root cause findings, integrated interventions, and evaluation plan.</div>
+      <a class="dl-btn" href="full-report.pdf" download aria-label="Download Full Research Report PDF"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</a>
+    </div>
+    <div class="resource-card">
+      <div class="resource-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+      <div class="resource-title">Presentation Slides</div>
+      <div class="resource-desc">Full slide deck for reference and follow-up review.</div>
+      <a class="dl-btn" href="presentation-slides.pdf" download aria-label="Download Presentation Slides PDF"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</a>
+    </div>
+  </div>
+</section>
+
+<section id="philosophy">
+  <div class="section-label">Our Approach</div>
+  <div class="section-title">Grounded in HPT</div>
+  <div class="section-sub">Three CPT competency domains. Ten ISPI principles. One non-negotiable rule: diagnose before you design.</div>
+  <div class="phil-grid">
+    <div class="phil-card">
+      <div class="phil-num">01</div>
+      <h3>Performance Analysis</h3>
+      <p>We identify gaps, analyze organizational context, and conduct root cause analysis — diagnosing the real problem before ever selecting a solution.</p>
+      <em>"What is preventing desired performance — and why?"</em>
+    </div>
+    <div class="phil-card">
+      <div class="phil-num">02</div>
+      <h3>Intervention Design</h3>
+      <p>We select, design, and prototype solutions that blend training and non-training interventions — aligned to systems, constraints, and stakeholder needs.</p>
+      <em>"What combination of interventions will improve performance?"</em>
+    </div>
+    <div class="phil-card">
+      <div class="phil-num">03</div>
+      <h3>Evaluation & Change</h3>
+      <p>We build measurement strategies, evaluate outcomes, and support adoption — communicating results and adjusting based on evidence.</p>
+      <em>"Did it work — and how do we sustain it?"</em>
+    </div>
+    <div class="phil-card">
+      <div class="phil-num">+</div>
+      <h3>ISPI Principles</h3>
+      <p>Every decision is guided by the ISPI 10 Standards — systems thinking, cause-before-solution, evidence-based design, and ethical human impact.</p>
+      <em>Diagnosis before design. Always.</em>
+      <a href="https://www.ispi.international/performance-standards" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:5px;margin-top:0.75rem;font-size:0.72rem;font-weight:600;color:#f0a875;text-decoration:none;letter-spacing:0.04em;opacity:0.85;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f0a875" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        ISPI Performance Standards ↗
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>Ironclad Collective</strong><span class="sep">·</span><em style="color:rgba(255,255,255,0.6);font-style:normal;">Ironclad analysis. Integrated by design.</em><br style="margin-bottom:0.5rem;">
+  <span style="font-size:0.75rem;"><a href="https://ispi2026.mystrikingly.com/" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,0.6);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#f0a875'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">ISPI HPT Case Competition 2026 ↗</a><span class="sep">·</span>Boise State University</span>
+</footer>
+
+<script>
+  const burger = document.getElementById('hamburger');
+  const mob = document.getElementById('mobileMenu');
+  burger.addEventListener('click', () => {
+    const open = burger.classList.toggle('open');
+    mob.classList.toggle('open');
+    burger.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+  });
+  function closeMenu() {
+    burger.classList.remove('open');
+    mob.classList.remove('open');
+    burger.setAttribute('aria-label', 'Open navigation menu');
+  }
+
+  const secs = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    secs.forEach(s => { if (window.scrollY >= s.offsetTop - 100) cur = s.id; });
+    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+  });
+
+  const team = [
+    { name: "Kaleigh Ketelhut",   role: "Performance Analyst",           photo: "", email: "member1@email.com", linkedin: "#", bio: "Add your 150-word biography here. Share your professional background, what drew you to performance improvement, your current role or program focus, and what you contributed to this project. This bio will be submitted to ISPI for the competition program and website." },
+    { name: "Tammy Sanders",      role: "Cause Analysis Specialist",     photo: "", email: "member2@email.com", linkedin: "#", bio: "Add your 150-word biography here. Share your professional background, what drew you to performance improvement, your current role or program focus, and what you contributed to this project. This bio will be submitted to ISPI for the competition program and website." },
+    { name: "Caroline Huxtable",  role: "Intervention Designer",         photo: "", email: "member3@email.com", linkedin: "#", bio: "Add your 150-word biography here. Share your professional background, what drew you to performance improvement, your current role or program focus, and what you contributed to this project. This bio will be submitted to ISPI for the competition program and website." },
+    { name: "Alannah Fehrenbach", role: "Systems Thinking Strategist",   photo: "", email: "member4@email.com", linkedin: "#", bio: "Add your 150-word biography here. Share your professional background, what drew you to performance improvement, your current role or program focus, and what you contributed to this project. This bio will be submitted to ISPI for the competition program and website." },
+    { name: "Ryne Tobar",         role: "HPT Solutions Architect",       photo: "ryne.jpg", email: "rynetobar@u.boisestate.edu", linkedin: "https://www.linkedin.com/in/rynetobar/", bio: "Add your 150-word biography here. Share your professional background, what drew you to performance improvement, your current role or program focus, and what you contributed to this project. This bio will be submitted to ISPI for the competition program and website." },
+    { name: "Team Member 6",      role: "Evaluation & Measurement Lead", photo: "", email: "member6@email.com", linkedin: "#", bio: "Add your 150-word biography here. Share your professional background, what drew you to performance improvement, your current role or program focus, and what you contributed to this project. This bio will be submitted to ISPI for the competition program and website." },
+    { name: "Team Member 7",      role: "Stakeholder & Change Lead",     photo: "", email: "member7@email.com", linkedin: "#", bio: "Add your 150-word biography here. Share your professional background, what drew you to performance improvement, your current role or program focus, and what you contributed to this project. This bio will be submitted to ISPI for the competition program and website." },
+  ];
+
+  const grid = document.getElementById('teamGrid');
+  team.forEach(m => {
+    const initials = m.name.split(' ').map(w => w[0]).join('').slice(0,2);
+    const av = m.photo ? `<img src="${m.photo}" alt="Headshot of ${m.name}">` : initials;
+    grid.innerHTML += `
+      <div class="member-card">
+        <div class="member-top">
+          <div class="avatar" aria-hidden="true">${av}</div>
+          <div><div class="member-name">${m.name}</div><div class="member-role">${m.role}</div></div>
+        </div>
+        <div class="member-bio">${m.bio}</div>
+        <div class="member-links">
+          <a href="mailto:${m.email}" aria-label="Email ${m.name}"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>${m.email}</a>
+          <a href="${m.linkedin}" target="_blank" rel="noopener noreferrer" aria-label="${m.name} LinkedIn profile"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn Profile</a>
+        </div>
+      </div>`;
+  });
+
+  const VIDEO_SRC = 'presentation.mp4';
+  const VIDEO_TYPE = 'local';
+  function loadVideo() {
+    const c = document.getElementById('videoContainer');
+    c.innerHTML = VIDEO_TYPE === 'youtube'
+      ? `<iframe src="${VIDEO_SRC}?autoplay=1" allowfullscreen allow="autoplay" title="Ironclad Collective Presentation"></iframe>`
+      : `<video controls autoplay style="position:absolute;top:0;left:0;width:100%;height:100%;background:#000;" aria-label="Ironclad Collective Presentation Video"><source src="${VIDEO_SRC}" type="video/mp4">Your browser does not support video.</video>`;
+  }
+</script>
+</body>
+</html>
